@@ -1,0 +1,61 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #9d174d;
+  background-color: #fce7f3;
+  border-radius: 9999px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #831843;
+}
+
+.input {
+  padding: 0.6rem 0.75rem;
+  border: 1.5px solid #fbcfe8;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  background-color: #fff5f9;
+  color: #500724;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.input:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: #ec4899;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.18);
+}
+
+.error {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #dc2626;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}

@@ -4,7 +4,9 @@ import ProductRemote from "../../../data/product/source/product-remote.ts";
 import ProductRepository from "../../../data/product/repository/product-repository.ts";
 import ProductGrid from "../../organisms/ProductGrid";
 import SearchBar from "../../molecules/SearchBar";
+import ProductFormModal from "../../organisms/ProductFormModal";
 import { useProducts } from "../../../context/ProductContext";
+import type { ProductValues } from "../../../types/product";
 import styles from "./styles.module.css";
 
 const repository = ProductRepository(
@@ -12,8 +14,10 @@ const repository = ProductRepository(
 );
 
 export default function ProductsPage() {
-  const { products, replaceProducts, resetProducts } = useProducts();
+  const { products, replaceProducts, addProduct, resetProducts } =
+    useProducts();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -46,6 +50,12 @@ export default function ProductsPage() {
     }
   }
 
+  function handleAddProduct(values: ProductValues) {
+    const created = addProduct(values);
+    setError("");
+    setMessage(`Produk "${created.name}" berhasil ditambahkan.`);
+  }
+
   function handleResetData() {
     resetProducts();
     setSearchQuery("");
@@ -70,7 +80,12 @@ export default function ProductsPage() {
         </p>
       </header>
       <div className={styles.toolbar}>
-        <Button onClick={handleLoadProducts} disabled={isLoading}>
+        <Button onClick={() => setIsAddModalOpen(true)}>+ Tambah Produk</Button>
+        <Button
+          variant="secondary"
+          onClick={handleLoadProducts}
+          disabled={isLoading}
+        >
           {isLoading ? "Memuat..." : "Muat dari API"}
         </Button>
         <Button variant="secondary" onClick={handleResetData}>
@@ -112,6 +127,11 @@ export default function ProductsPage() {
             ? `Produk dipilih: ${selectedProduct.name}.`
             : "Klik Pilih produk untuk melihat status pilihan.")}
       </p>
+      <ProductFormModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleAddProduct}
+      />
     </>
   );
 }
