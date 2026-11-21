@@ -5,8 +5,9 @@ import ProductRepository from "../../../data/product/repository/product-reposito
 import ProductGrid from "../../organisms/ProductGrid";
 import SearchBar from "../../molecules/SearchBar";
 import ProductFormModal from "../../organisms/ProductFormModal";
+import ConfirmDeleteModal from "../../organisms/ConfirmDeleteModal";
 import { useProducts } from "../../../context/ProductContext";
-import type { ProductValues } from "../../../types/product";
+import type { Product, ProductValues } from "../../../types/product";
 import styles from "./styles.module.css";
 
 const repository = ProductRepository(
@@ -14,10 +15,18 @@ const repository = ProductRepository(
 );
 
 export default function ProductsPage() {
-  const { products, replaceProducts, addProduct, resetProducts } =
-    useProducts();
+  const {
+    products,
+    replaceProducts,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    resetProducts,
+  } = useProducts();
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -54,6 +63,27 @@ export default function ProductsPage() {
     const created = addProduct(values);
     setError("");
     setMessage(`Produk "${created.name}" berhasil ditambahkan.`);
+  }
+
+  function handleEditProduct(values: ProductValues) {
+    if (!editingProduct) return;
+    updateProduct(editingProduct.id, values);
+    setError("");
+    setMessage(`Produk "${values.name}" berhasil diperbarui.`);
+  }
+
+  function handleConfirmDelete(id: number) {
+    const target = products.find((item) => item.id === id);
+    deleteProduct(id);
+    if (selectedProductId === id) {
+      setSelectedProductId(null);
+    }
+    setError("");
+    setMessage(
+      target
+        ? `Produk "${target.name}" berhasil dihapus.`
+        : "Produk berhasil dihapus.",
+    );
   }
 
   function handleResetData() {
@@ -118,6 +148,8 @@ export default function ProductsPage() {
           <ProductGrid
             products={filteredProducts}
             onSelect={handleSelectProduct}
+            onEdit={setEditingProduct}
+            onDelete={setDeletingProduct}
           />
         )}
       </section>
@@ -131,6 +163,18 @@ export default function ProductsPage() {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onSubmit={handleAddProduct}
+      />
+      <ProductFormModal
+        isOpen={Boolean(editingProduct)}
+        initialProduct={editingProduct}
+        onClose={() => setEditingProduct(null)}
+        onSubmit={handleEditProduct}
+      />
+      <ConfirmDeleteModal
+        isOpen={Boolean(deletingProduct)}
+        product={deletingProduct}
+        onClose={() => setDeletingProduct(null)}
+        onConfirm={handleConfirmDelete}
       />
     </>
   );
