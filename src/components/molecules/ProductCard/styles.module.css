@@ -18,3 +18,15 @@
 .price {
     @apply mt-2 mb-6 text-2xl font-semibold wrap-break-word text-blue-600;
 }
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+
+.actionRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
