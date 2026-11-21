@@ -1,20 +1,17 @@
 import { useState } from "react"
 import Button from "../../atoms/Button"
-import ProductModel from "../../../data/product/model/product-model.ts"
 import ProductRemote from "../../../data/product/source/product-remote.ts"
 import ProductRepository from "../../../data/product/repository/product-repository.ts"
 import ProductGrid from "../../organisms/ProductGrid"
+import { useProducts } from "../../../context/ProductContext"
 import styles from "./styles.module.css"
 
-const exampleProducts = [
-    ProductModel.fromResponse({ id: 1, name: "Pulpen", price: 5000 }).toJSON(),
-]
 const repository = ProductRepository(
     ProductRemote({ baseUrl: import.meta.env.VITE_API_BASE_URL ?? "" }),
 )
 
 export default function ProductsPage() {
-    const [products, setProducts] = useState(exampleProducts)
+    const { products, replaceProducts, resetProducts } = useProducts()
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
     const [message, setMessage] = useState("")
@@ -28,20 +25,27 @@ export default function ProductsPage() {
     async function handleLoadProducts() {
         setIsLoading(true)
         setError("")
-        setMessage("Memuat produk…")
+        setMessage("Memuat produk...")
         try {
             const models = await repository.getProductList()
-            setProducts(models.map((model) => model.toJSON()))
+            replaceProducts(models.map((model) => model.toJSON()))
             setSelectedProductId(null)
             setMessage(`${models.length} produk berhasil dimuat dari API.`)
-        } catch (error) {
+        } catch (err) {
             setError(
-                error instanceof Error ? error.message : "Gagal memuat produk.",
+                err instanceof Error ? err.message : "Gagal memuat produk.",
             )
             setMessage("")
         } finally {
             setIsLoading(false)
         }
+    }
+
+    function handleResetData() {
+        resetProducts()
+        setSelectedProductId(null)
+        setError("")
+        setMessage("Data produk dikembalikan ke daftar awal.")
     }
 
     function handleSelectProduct(id: number) {
@@ -52,20 +56,22 @@ export default function ProductsPage() {
     return (
         <>
             <header className={styles.header}>
-                <p className={styles.eyebrow}>Starter pembelajaran React</p>
+                <p className={styles.eyebrow}>Pemrograman Web — Tugas 4</p>
                 <h1 className={styles.title}>Manajemen Produk</h1>
                 <p className={styles.description}>
-                    Satu contoh komponen untuk setiap tingkat Atomic Design.
-                    Kembangkan fitur berikutnya sesuai PRD.
+                    Kelola daftar produk lengkap dengan pencarian, CRUD, detail
+                    produk, dan penyimpanan otomatis di browser.
                 </p>
             </header>
             <div className={styles.toolbar}>
                 <Button onClick={handleLoadProducts} disabled={isLoading}>
-                    {isLoading ? "Memuat…" : "Muat dari API"}
+                    {isLoading ? "Memuat..." : "Muat dari API"}
+                </Button>
+                <Button variant="secondary" onClick={handleResetData}>
+                    Reset Data Awal
                 </Button>
                 <p className={styles.hint}>
-                    Opsional: gunakan backend Anda sendiri. Saat halaman dibuka,
-                    tidak ada request API.
+                    Perubahan data tersimpan otomatis di localStorage.
                 </p>
             </div>
             {error && (
@@ -73,9 +79,9 @@ export default function ProductsPage() {
                     {error}
                 </p>
             )}
-            <section aria-label="Contoh daftar produk" aria-busy={isLoading}>
+            <section aria-label="Daftar produk" aria-busy={isLoading}>
                 {products.length === 0 && (
-                    <p className={styles.notice}>Belum ada produk dari API.</p>
+                    <p className={styles.notice}>Belum ada data produk.</p>
                 )}
                 <ProductGrid
                     products={products}
@@ -86,7 +92,7 @@ export default function ProductsPage() {
                 {message ||
                     (selectedProduct
                         ? `Produk dipilih: ${selectedProduct.name}.`
-                        : "Klik Pilih produk untuk mempelajari callback dari kartu ke halaman.")}
+                        : "Klik Pilih produk untuk melihat status pilihan.")}
             </p>
         </>
     )
