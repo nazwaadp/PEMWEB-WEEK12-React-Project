@@ -1,5 +1,58 @@
 @reference "../../../../app/globals.css";
 
 .container {
-    @apply mx-auto w-full max-w-[1200px] px-5 py-10 sm:px-8 sm:py-16;
+  @apply mx-auto w-full max-w-[1200px] px-5 py-10 sm:px-8 sm:py-16;
+}
+
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  margin-bottom: 1.75rem;
+  background-color: #fff5f9;
+  border: 1.5px solid #fbcfe8;
+  border-radius: 0.75rem;
+}
+
+.brand {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #831843;
+  text-decoration: none;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navLink {
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #9d174d;
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.navLink:hover {
+  background-color: #fce7f3;
+  color: #831843;
+}
+
+.navLinkActive {
+  background-color: #db2777;
+  color: #ffffff;
+}
+
+.navLinkActive:hover {
+  background-color: #be185d;
+  color: #ffffff;
 }
