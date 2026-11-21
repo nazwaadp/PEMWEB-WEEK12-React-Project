@@ -1,4 +1,5 @@
 import type { Product } from "../../../types/product";
+import { useNavigate } from "react-router";
 import { TbPackage } from "react-icons/tb";
 import Button from "../../atoms/Button";
 import { formatRupiah } from "../../../utils/formatRupiah";
@@ -17,6 +18,8 @@ export default function ProductCard({
   onEdit,
   onDelete,
 }: Props) {
+  const navigate = useNavigate();
+
   return (
     <article className={styles.card}>
       <div className={styles.header}>
@@ -26,7 +29,15 @@ export default function ProductCard({
       <h2 className={styles.name}>{product.name}</h2>
       <p className={styles.price}>{formatRupiah(product.price)}</p>
       <div className={styles.actions}>
-        <Button onClick={() => onSelect(product.id)}>Pilih produk</Button>
+        <div className={styles.actionRow}>
+          <Button onClick={() => onSelect(product.id)}>Pilih produk</Button>
+          <Button
+            variant="secondary"
+            onClick={() => navigate(`/products/${product.id}`)}
+          >
+            Detail
+          </Button>
+        </div>
         <div className={styles.actionRow}>
           <Button
             variant="secondary"
