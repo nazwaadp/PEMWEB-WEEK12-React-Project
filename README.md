@@ -1,120 +1,95 @@
-# React Template — Pemrograman Web
+# Manajemen Produk — Tugas 4 Pemrograman Web
 
-Template environment praktikum Pemrograman Web menggunakan **React, TypeScript, Vite, React Router, dan Tailwind CSS**. Mahasiswa menggunakan template ini sebagai fondasi repository tugas masing-masing, lalu mengembangkan fitur sesuai instruksi perkuliahan.
+## Identitas Mahasiswa
 
-## Membuat repository tugas
+- **Nama**: Nazwa Aulia Dwi Purnomo
+- **NRP**: 5027251018
+- **Kelas**: Pemrograman Web - A
 
-1. Buka [react-template](https://github.com/anasmcfudy/react-template).
-2. Pilih **Use this template → Create a new repository**.
-3. Isi nama repository tugas pada akun GitHub sendiri.
-4. Clone repository yang baru dibuat ke komputer.
+## Fitur yang Dikembangkan
 
-```sh
-git clone https://github.com/USERNAME/NAMA-REPOSITORY.git
-cd NAMA-REPOSITORY
-npm ci
+1. **CRUD Produk**:
+   - **Create**: Menambahkan produk baru melalui pop-up `ProductFormModal` dengan validasi nama dan harga.
+   - **Read**: Menampilkan daftar produk beserta format mata uang Rupiah dan informasi ID.
+   - **Update**: Mengubah nama maupun harga produk langsung dari halaman daftar produk maupun halaman detail produk.
+   - **Delete**: Menghapus produk dengan pop-up konfirmasi `ConfirmDeleteModal`.
+2. **Pencarian Real-Time**:
+   - Komponen `SearchBar` memfilter daftar produk berdasarkan kata kunci nama produk dan menampilkan jumlah produk yang cocok.
+3. **Penyimpanan Persisten (`localStorage`) & Integrasi API**:
+   - State produk dikelola secara terpusat menggunakan `ProductContext` dan disimpan otomatis ke `localStorage`.
+   - Tersedia tombol **Reset Data Awal** dan tombol **Muat dari API** (opsional melalui konfigurasi `VITE_API_BASE_URL` di `.env.local`).
+4. **Halaman Detail Produk (`/products/:id`)**:
+   - Menampilkan rincian produk berdasarkan parameter URL `id`, lengkap dengan tombol Edit, Hapus, dan penanganan apabila ID tidak ditemukan.
+5. **Halaman Tambahan (`/about`) & Navigasi**:
+   - Navbar utama pada `PageLayout` untuk berpindah antara halaman **Produk** (`/products`) dan **Tentang** (`/about`).
+6. **Halaman 404 Not Found (`*`)**:
+   - Menangani URL yang tidak dikenali dengan tampilan khusus 404 dan tombol navigasi kembali ke daftar produk.
+
+## Struktur Komponen (Atomic Design)
+
+- **Atoms**: `Button`
+- **Molecules**: `ProductCard`, `SearchBar`, `Modal`
+- **Organisms**: `ProductGrid`, `ProductFormModal`, `ConfirmDeleteModal`
+- **Templates**: `PageLayout`
+- **Pages**: `ProductsPage`, `ProductDetailPage`, `AboutPage`, `NotFoundPage`
+
+## Cara Menjalankan Aplikasi
+
+1. Instal dependensi:
+   ```bash
+   npm ci
+   ```
+
+````
+
+2. Jalankan server pengembangan:
+```bash
 npm run dev
-```
 
-Ganti `USERNAME` dan `NAMA-REPOSITORY` dengan akun serta nama repository tugas sendiri. Perubahan dan pengumpulan tugas dilakukan di repository tersebut.
+````
 
-Untuk sekadar mencoba template dosen:
+3. Buka alamat lokal yang ditampilkan di terminal (umumnya `http://127.0.0.1:5173`).
 
-```sh
-git clone https://github.com/anasmcfudy/react-template.git
-cd react-template
-npm ci
-npm run dev
-```
+## Perintah Pemeriksaan
 
-Gunakan Node.js **22.12 atau lebih baru** dan npm. Buka alamat yang ditampilkan Vite, biasanya `http://127.0.0.1:5173`.
+- `npm run typecheck` — Memeriksa tipe TypeScript
+- `npm run lint` — Memeriksa aturan ESLint
+- `npm run build` — Membuat build produksi
 
-## Yang sudah tersedia
+## Dokumentasi
 
-- Konfigurasi React dan TypeScript dengan pemeriksaan tipe `strict`.
-- Vite sebagai development server dan build tool.
-- React Router dengan nested route serta layout yang menggunakan `Outlet`.
-- Tailwind CSS v4 melalui PostCSS, CSS Modules, dan token tema.
-- Contoh setiap tingkat Atomic Design: `Button`, `ProductCard`, `ProductGrid`, `PageLayout`, dan `ProductsPage`.
-- Contoh komunikasi API GET dengan pemisahan model, parameter, source, dan repository.
-- ESLint, Prettier, unit test, dan konfigurasi tes browser Playwright.
+### 1. Pencarian Produk Real-Time <br>
 
-Saat dibuka, halaman menampilkan **satu produk contoh: Pulpen**. Tombol **Pilih produk** memperlihatkan callback dari kartu ke state halaman. Tidak ada request API otomatis dan belum ada penyimpanan melalui localStorage.
+![Pencarian Produk Real-Time ](<dokumentasi/Screenshot 2026-11-21 143946.png>)
 
-Template ini menyediakan environment serta contoh dasar. Fitur tugas seperti CRUD lengkap, pencarian, detail produk, halaman tambahan, dan 404 dikembangkan mahasiswa sesuai instruksi dosen.
+### 2. Validasi Form Tambah Produk<br>
 
-## Struktur proyek
+![Validasi Form Tambah Produk](<dokumentasi/Screenshot 2026-11-21 144150.png>)
 
-```text
-app/
-  entry.tsx             # Entry browser dan BrowserRouter
-  globals.css           # Import Tailwind dan CSS global
-  routes.tsx            # Deklarasi route
-  page.tsx              # Pembungkus halaman root
-  products/page.tsx      # Pembungkus halaman produk
-src/
-  components/
-    atoms/              # Button
-    molecules/          # ProductCard
-    organisms/          # ProductGrid
-    templates/          # PageLayout dan Outlet
-    pages/              # State serta koordinasi halaman
-  data/product/
-    model/
-    param/
-    source/
-    repository/
-  styles/
-  types/
-  utils/
-tests/
-```
+### 3. Penambahan Produk Baru <br>
 
-Alur props: `ProductsPage → ProductGrid → ProductCard → Button`. Callback berjalan kembali menuju pemilik state.
+![Penambahan Produk Baru](<dokumentasi/Screenshot 2026-11-21 144221.png>)
 
-Folder `app` tetap menggunakan Vite. Nama `page.tsx` tidak otomatis membentuk route; daftarkan setiap URL di `app/routes.tsx`. Route `/` saat ini mengarahkan ke `/products`, begitu juga URL yang belum dikenali. Ubah fallback tersebut saat tugas meminta halaman 404. Hosting produksi perlu mendukung fallback SPA ke `index.html`.
+### 4. Halaman Detail Produk (`/products/:id`) <br>
 
-## Mencoba GET API (opsional)
+![Halaman Detail Produk](<dokumentasi/Screenshot 2026-11-21 144307.png>)
 
-Aplikasi dapat berjalan dengan produk contoh tanpa backend. Untuk mencoba tombol **Muat dari API**:
+### 5. Penanganan ID Produk Tidak Ditemukan <br>
 
-```sh
-cp .env.example .env.local
-```
+![Penanganan ID Produk Tidak Ditemukan](<dokumentasi/Screenshot 2026-11-21 144343.png>)
 
-Sesuaikan alamat backend di `.env.local`:
+### 6. Pembaruan Data Produk (Edit) <br>
 
-```dotenv
-VITE_API_BASE_URL=http://localhost:3000/api
-```
+![Pembaruan Data Produk](<dokumentasi/Screenshot 2026-11-21 144438.png>)
 
-Restart Vite setelah mengubah konfigurasi. Tombol akan meminta `GET http://localhost:3000/api/products`. Backend harus mengizinkan origin frontend melalui CORS.
+### 7. Pop-up Konfirmasi Hapus Produk <br>
 
-Response yang diharapkan adalah **array langsung**:
+![Pop-up Konfirmasi Hapus Produk](<dokumentasi/Screenshot 2026-11-21 144456.png>)
 
-```json
-[{ "id": 1, "name": "Pulpen", "price": 5000 }]
-```
+### 8. Halaman Tambahan (`/about`) <br>
 
-Jika backend menggunakan format lain, misalnya `{ "data": [...] }`, sesuaikan pemetaan di repository. Variabel `VITE_*` masuk ke aplikasi browser, jadi jangan menyimpan token atau secret privat di dalamnya. Berkas `.env.local` tidak ikut dipublikasikan.
+![Halaman Tambahan](<dokumentasi/Screenshot 2026-11-21 144528.png>)
 
-## Perintah yang tersedia
+### 9. Halaman 404 Not Found <br>
 
-| Perintah | Kegunaan |
-| --- | --- |
-| `npm run dev` | Menjalankan aplikasi untuk pengembangan |
-| `npm run typecheck` | Memeriksa tipe TypeScript |
-| `npm run lint` | Memeriksa aturan kode |
-| `npm test` | Menjalankan unit test |
-| `npm run build` | Memeriksa tipe dan membuat build produksi |
-| `npm run preview` | Melihat hasil build secara lokal |
-| `npm run test:e2e` | Menjalankan tes browser |
-| `npm run format` | Memformat berkas dengan Prettier |
-
-Tes browser menggunakan Google Chrome yang terpasang dan memerlukan port 5173 yang belum dipakai. Request API pada tes di-mock, sehingga tidak memerlukan backend aktif.
-
-## Mengembangkan tugas
-
-Gunakan komponen yang tersedia sebagai contoh, lalu tambahkan fitur sesuai kebutuhan tugas. Pertahankan pemisahan tanggung jawab komponen, gunakan props/callback dengan jelas, dan tempatkan state bersama di atas halaman yang memakainya.
-
-Mahasiswa harus dapat menjelaskan kode yang dikumpulkan, termasuk bagian yang dibuat dengan bantuan AI. Sesuaikan README pada repository tugas dengan fitur dan cara menjalankan aplikasi masing-masing.
+![Halaman 404](<dokumentasi/Screenshot 2026-11-21 144554.png>)
